@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+    <script src="http://www.jq22.com/jquery/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="col-sm-2">
+<select class="form-control"  name="province" id="province" onchange="selectProvince('province',2,'city','{:url(\'city/city\')}')">
+    <option value="0">请选择省份/直辖市</option>
+    {volist name="province" id="vo"}
+    <option value="{$vo.id}">{$vo.name}</option>
+    {/volist}
+</select>
+</div>
+<div class="col-sm-2">
+<select class="form-control"  name="city" id="city" onchange="selectProvince('city',3,'area','{:url(\'city/city\')}')">
+    <option value=""> 市/县</option>
+</select>
+</div>
+<div class="col-sm-2">
+<select name="area" id="area" class="form-control " >
+    <option>区</option>
+</select>
+</div>
+</body>
+<script type="text/javascript">
+    function selectProvince(sel,type_id,next_sel,url) {
+        //jQuery()=$()
+        jQuery("#"+next_sel+" option").each(function(){
+            jQuery(this).remove();
+        });
+        jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+next_sel));
+        if(jQuery("#"+sel).val()==0){
+            return;
+        }
+        jQuery.getJSON(url,{pid:jQuery("#"+sel).val(),type:type_id},function(data){
+            if(data){
+                console.log(data);
+                jQuery.each(data,function(res,pro){
+                    jQuery("<option value="+pro.id+">"+pro.name+"</option>").appendTo(jQuery("#"+next_sel));
+                });
+            }else{
+                jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+next_sel));
+            }
+        });
+    }
+
+</script>
+</html>
